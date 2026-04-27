@@ -117,8 +117,8 @@ class Jogo:
             self.jogador2.definir_coordenadas(self.tela.largura - self.jogador2.dimensoes[0] * 3, self.tela.altura/2)
 
             self.bola.definir_coordenadas(self.tela.largura/2, self.tela.altura/2)
+            self.bola.resetar_velocidade() 
             self.bola.sortear_movimento()
-            self.bola.resetar_velocidade()
 
             while True:
                 evento = self.detectar_eventos()
@@ -131,7 +131,7 @@ class Jogo:
                             jogador.resetar_pontuacao()
                         return self.menu() 
                 
-                self.tela.renderizar(lista_elementos, pontuacoes, taxa_quadros=60)
+                self.tela.renderizar(lista_elementos, pontuacoes, taxa_quadros=90)
 
                 if not(self.pausado):
                     if pygame.key.get_pressed()[pygame.K_w]:
@@ -214,5 +214,6 @@ class Jogo:
                 dados_json = json.load(file)
             
             self.pontuacao_maxima = dados_json["pontuacao_maxima"]
+    
 
 Jogo().menu()
