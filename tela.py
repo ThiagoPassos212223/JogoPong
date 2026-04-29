@@ -1,16 +1,19 @@
 import pygame
 from fonte import Fonte
-import os
-import json
 
 class Tela:
-    def __init__(self, raiz="", fontes:list[Fonte] = []):        
-        self.carregar_informacoes(raiz, fontes)
+    def __init__(self, largura, altura, cor_fundo, fontes=None):  
+        self.fontes = fontes
+        self.largura = largura
+        self.altura = altura
+        self.cor_fundo = cor_fundo
 
-        self.tela = pygame.display.set_mode((self.largura, self.altura))
         pygame.font.init()
 
-        self.fontes = fontes
+        self.criar_tela()
+
+    def criar_tela(self):
+        self.tela = pygame.display.set_mode((self.largura, self.altura))
 
     def renderizar(self, objetos:list[Objeto]=[], fontes:list[Fonte]=[], taxa_quadros=60):
         for objeto in objetos:
@@ -76,28 +79,12 @@ class Tela:
             objeto.y = 0 
         elif (y > 0):
             objeto.y = self.altura - altura
+    
+    def retornar_informacoes(self):
+        dados_json = {
+            "largura": self.largura,
+            "altura": self.altura,
+            "cor_fundo": self.cor_fundo
+        }
 
-    def carregar_informacoes(self, caminho_raiz, fontes=None):
-        self.fontes = fontes
-
-        caminho = os.path.join(caminho_raiz, "tela_config.json")
-        if not(os.path.exists(caminho)):
-            self.largura, self.altura = [800, 600]
-            self.cor_fundo = (0, 0, 0)
-
-            dados_json = {
-                "largura": self.largura,
-                "altura": self.altura,
-                "cor_fundo": self.cor_fundo
-            }
-
-            with open(os.path.join(caminho), "w", encoding="utf-8") as file:
-                json.dump(dados_json, file, indent=4, ensure_ascii=False)
-        
-        else:
-            with open(os.path.join(caminho), "r", encoding="utf-8") as file:
-                dados_json = json.load(file)
-            
-            self.largura = dados_json["largura"] 
-            self.altura = dados_json["altura"]
-            self.cor_fundo = dados_json["cor_fundo"]
+        return dados_json

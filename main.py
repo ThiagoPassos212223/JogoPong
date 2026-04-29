@@ -4,39 +4,34 @@ from jogador import Jogador
 from fonte import Fonte
 from tela import Tela
 from bola import Bola
-
-import os
-import json
-
-if not(os.path.exists("config")):
-    os.mkdir("config")
+from configuracoes import GerenciarDados
 
 class Jogo:
     def __init__(self):
-        caminho = "config"
-
-        self.carregar_informacoes(caminho)
+        informacoes = GerenciarDados().carregar_dados()
 
         pygame.init()
 
-        fontes = [
+        fontes1 = [
             pygame.font.SysFont("arial", 11, False, False),
             pygame.font.SysFont("arial", 14, True, False)
         ]
 
-        self.tela = Tela(caminho, fontes)
+        self.tela = Tela(**informacoes["tela"], fontes=fontes1)
 
         # carregando elementos
-        self.jogador1 = Jogador(caminho)        
-        self.jogador2 = Jogador(caminho)
+        self.jogador1 = Jogador(**informacoes["jogador"])        
+        self.jogador2 = Jogador(**informacoes["jogador"])
 
         self.jogadores = [self.jogador1, self.jogador2]
 
-        self.bola = Bola(caminho)
+        self.bola = Bola(**informacoes["bola"])
 
         # configurações básicas
         self.pausado = True
         
+        self.carregar_informacoes(**informacoes["jogo"])
+           
     def menu(self):
         opcoes = [
             Fonte("Play", (255, 255, 255), (100, 100), False),
@@ -196,24 +191,8 @@ class Jogo:
 
             self.tela.renderizar(fontes=[mensagem], taxa_quadros=10)
     
-    def carregar_informacoes(self, caminho_raiz):
-        caminho = os.path.join(caminho_raiz, "jogo.json")
-
-        if not(os.path.exists(caminho)):
-            self.pontuacao_maxima = 3
-
-            dados_json = {
-                "pontuacao_maxima": self.pontuacao_maxima
-            }
-
-            with open(os.path.join(caminho), "w", encoding="utf-8") as file:
-                json.dump(dados_json, file, indent=4, ensure_ascii=False)
-        
-        else:
-            with open(os.path.join(caminho), "r", encoding="utf-8") as file:
-                dados_json = json.load(file)
-            
-            self.pontuacao_maxima = dados_json["pontuacao_maxima"]
+    def carregar_informacoes(self, pontuacao_maxima):    
+        self.pontuacao_maxima = pontuacao_maxima
     
 
 Jogo().menu()

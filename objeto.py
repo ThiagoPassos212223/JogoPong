@@ -3,12 +3,12 @@ class Objeto:
         self.dimensoes = dimensoes
         self.cor = cor
         self.velocidades = velocidades
-        self.velocidades_original = velocidades
+        self.velocidades_original = velocidades.copy()
 
         self.x, self.y = (None, None)
     
     def resetar_velocidade(self):
-        self.velocidades = self.velocidades_original
+        self.velocidades = self.velocidades_original.copy()
 
     def definir_coordenadas(self, x, y):
         self.x = x
